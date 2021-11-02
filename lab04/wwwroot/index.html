@@ -1,0 +1,57 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SignalR Chat - IlinaL</title>
+</head>
+<body>
+
+    <div id="inputForm">
+        <input type="number" id="message" />
+        <input type="button" id="sendBtn" value="Отправить" />
+    </div>
+    <div id="chatroom"></div>
+    <script src="js/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("/chat")
+            .build();   
+
+
+        document.getElementById("sendBtn").addEventListener("click", function (message)
+        {
+            var number = parseInt(document.getElementById("message").value);
+
+            hubConnection.stream("Send", number).subscribe({
+                next: (item) => {
+                    var li = document.createElement("li");
+                    li.textContent = item;
+                    document.getElementById("chatroom").appendChild(li);
+                },
+                complete: () => {
+                    var li = document.createElement("li");
+                    li.textContent = "Stream completed";
+                    document.getElementById("chatroom").appendChild(li);
+                },
+                error: (err) => {
+                    var li = document.createElement("li");
+                    li.textContent = err;
+                    document.getElementById("chatroom").appendChild(li);
+                },
+
+                const intervalHandle = setInterval(() => {
+                    iteration++;
+                    subject.next(getRandomInRange(Number(from), Number(to)));
+                    if (iteration == count) {
+                        clearInterval(intervalHandle);
+                        subject.complete();
+                    }
+
+            });
+        });
+
+        hubConnection.start();
+    </script>
+
+</body>
+</html>
